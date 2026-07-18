@@ -1,2 +1,3 @@
-# golf_shot_dispersion
-A dispersion pattern simulator for golf
+# Golf Shot Dispersion Program
+
+A simulator to generate golf shots dispersion patterns using data available on the web.
