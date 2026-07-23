@@ -4,14 +4,14 @@ A simulator to generate golf shots dispersion patterns using data available on t
 
 Install requirements:
 
->pip install numpy pandas matplotlib scipy tqdm matplotlib
+>pip3 install numpy pandas matplotlib scipy tqdm matplotlib
 
 To run:
 
->python bake_scalars.py
+>python3 bake_scalars.py
 
 then:
 
->python kde_visualizer.py
+>python3 kde_visualizer.py
 
 to view the model.
