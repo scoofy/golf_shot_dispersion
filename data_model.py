@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 from scipy.interpolate import RegularGridInterpolator, PchipInterpolator
 from scipy.stats import norm, qmc
 
@@ -326,24 +325,23 @@ class DispersionDataModel:
         Cleans the raw Hireko dictionary, imputes missing data,
         and builds monotonic interpolators for every club.
         """
+        # Deepcopy isn't strictly necessary since we only modify a specific key,
+        # but we copy the top-level dict to be safe.
         raw_data = hd_dist_dict_yards_men.copy()
-
-        # Remove the rogue 'CLUB' key
-        raw_data.pop('CLUB', None)
-
-        # Load into pandas and transpose so Handicaps are the index (rows) and Clubs are columns
-        df = pd.DataFrame(raw_data).sort_index()
-
-        # Impute the missing -5 HCP 3-Hybrid using the proportional gap (~246 yards)
-        if pd.isna(df.loc[-5, '3-Hybrid']):
-            df.loc[-5, '3-Hybrid'] = 246.0
 
         self.club_interpolators = {}
 
         # PchipInterpolator is perfect here because it prevents polynomial overshoot
-        # while requiring strictly increasing x-values (which our sorted [-5, 5, 15, 25] index provides)
-        for club in df.columns:
-            self.club_interpolators[club] = PchipInterpolator(df.index, df[club])
+        # while requiring strictly increasing x-values
+        for club, dist_data in raw_data.items():
+            # Sort the inner dictionary by its keys (handicaps)
+            sorted_data = sorted(dist_data.items())
+
+            # Unpack the sorted tuples into separate x and y lists
+            hcp_keys = [item[0] for item in sorted_data]
+            distances = [item[1] for item in sorted_data]
+
+            self.club_interpolators[club] = PchipInterpolator(hcp_keys, distances)
 
     def get_player_bag(self, hcp: float) -> dict:
         """

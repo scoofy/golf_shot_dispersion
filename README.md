@@ -4,7 +4,7 @@ A simulator to generate golf shots dispersion patterns using data available on t
 
 Install requirements:
 
->pip3 install numpy pandas matplotlib scipy tqdm matplotlib
+>pip3 install numpy matplotlib scipy tqdm matplotlib
 
 To run:
 
